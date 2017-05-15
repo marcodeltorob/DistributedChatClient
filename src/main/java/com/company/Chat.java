@@ -130,7 +130,7 @@ public class Chat {
                 System.out.println(s);
                 UdpMessage responseUdpMessage = gson.fromJson(s, UdpMessage.class);
                 if(responseUdpMessage.tag.equals("OK_PRIVATE_MSG")) {
-                     this.appendAcknowledgeChat();
+                     this.appendAcknowledgeChat(to_nickname);
                 }else{
 
                 }
@@ -171,11 +171,11 @@ public class Chat {
 
     public void appendToChat(String s){
         String sdf = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        readTextPane.setText(readTextPane.getText() + sdf + s + "\n");
+        readTextPane.setText(readTextPane.getText() + sdf + " " + s + "\n");
     }
 
-    public void appendAcknowledgeChat(){
-        readTextPane.setText(readTextPane.getText() + " "+ infoLabel.getText() +", had received your message \n");
+    public void appendAcknowledgeChat(String s){
+        readTextPane.setText(readTextPane.getText() + " " + s +", had received your message \n");
     }
 
 
