@@ -91,10 +91,10 @@ public class Login {
 //
 //        }
 
-
+        String tempUser = "Marco Del Toro";
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "REQUEST_CONNECTION";
-        messageToSend.nickname = "Marco Del Toro";
+        messageToSend.nickname = tempUser;
 
         Gson gson = new Gson();
         String json = gson.toJson(messageToSend);
@@ -122,7 +122,7 @@ public class Login {
                 mySocket.receive(responseDatagramPacket);
                 UdpMessage responseUdpMessage = gson.fromJson(new String(responseDatagramPacket.getData(), 0, responseDatagramPacket.getLength()), UdpMessage.class);
                 if(responseUdpMessage.tag.equals("OK_REQUEST_CONNECTION")) {
-                    openInitialScreen("Marco Del Toro", "192.168.100.8",null);
+                    openInitialScreen(tempUser, "192.168.100.8",null);
 //                  openInitialScreen(user.getName(),"192.168.100.8" ,fbClient);
                 }else{
                     JOptionPane.showMessageDialog(null, "Unable to Login try later", "Unable Login",JOptionPane.INFORMATION_MESSAGE);
