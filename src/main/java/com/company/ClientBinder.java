@@ -153,7 +153,7 @@ public class ClientBinder extends Thread {
                 copy(in, out);
                 out.close();
                 in.close();
-                JOptionPane.showMessageDialog(null,"You have new file: DocumentsReceived"+fileName, "New File", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null,"You have new file: "+fileName, "New File", JOptionPane.INFORMATION_MESSAGE);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (FileNotFoundException e) {
