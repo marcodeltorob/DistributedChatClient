@@ -5,10 +5,8 @@ import com.google.gson.Gson;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketTimeoutException;
+import java.io.*;
+import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -39,6 +37,7 @@ public class Chat {
         renderUI(name, ipServer);
 
         setListeners();
+
     }
 
     public String getKeyChat() {
@@ -75,10 +74,60 @@ public class Chat {
                 initialScreen.removeOpenChatWindows(chat);
             }
         });
+
+        sendFileButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+            }
+        });
     }
 
 
     private void sendFileButtonHandler() {
+
+
+        int timeout = 500;
+        DatagramSocket mySocket = null;
+        InetAddress receiverHost;
+        DatagramPacket datagram;
+
+        FileServer fileServer = new FileServer();
+        fileServer.start();
+
+        UdpMessage messageToSend = new UdpMessage();
+        messageToSend.tag = "FILE";
+        messageToSend.to_nickname = to_nickname;
+        messageToSend.nickname = username;
+
+        Gson gson = new Gson();
+        String json = gson.toJson(messageToSend);
+
+        try {
+            receiverHost = InetAddress.getByName("192.168.100.8");
+            int receiverPort = Integer.parseInt("8000");
+
+
+            // instantiates a datagram socket for sending the data
+            mySocket = new DatagramSocket();
+            byte[ ] buffer = json.getBytes( );
+            datagram = new DatagramPacket(buffer, buffer.length, receiverHost, receiverPort);
+
+            mySocket.send(datagram);
+            //mySocket.close( );
+
+            // Wait for OK Forward Private Message
+            mySocket.setSoTimeout(timeout);
+
+            byte[] bufferReceive = new byte[512];
+            DatagramPacket responseDatagramPacket = new DatagramPacket(bufferReceive, bufferReceive.length);
+
+        } // end try
+        catch (Exception ex) {
+            ex.printStackTrace( );
+        }finally {
+            mySocket.close();
+        }
 
 
     }
@@ -179,6 +228,41 @@ public class Chat {
     public void appendAcknowledgeChat(String s){
         readTextPane.setText(readTextPane.getText() + " " + s +", had received your message \n");
     }
+
+    public class FileServer extends Thread {
+        public void run() {
+            ServerSocket ss = null;
+            InputStream in = null;
+            OutputStream out = null;
+            Socket socket = null;
+            try {
+                ss = new ServerSocket(3000);
+                ss.setSoTimeout(5000);
+                socket = ss.accept();
+
+                in = new FileInputStream("send.txt");
+                out = socket.getOutputStream();
+
+                copy(in, out);
+                out.close();
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
+        }
+
+        private void copy(InputStream in, OutputStream out) throws IOException {
+            byte[] buf = new byte[8192];
+            int len = 0;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+        }
+
+    }
+
+
 
 
 

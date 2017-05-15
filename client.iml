@@ -55,5 +55,6 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:9.2.20.v20161216" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.2.20.v20161216" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.2.20.v20161216" level="project" />
+    <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
   </component>
 </module>

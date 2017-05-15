@@ -59,7 +59,7 @@ public class Login {
 
     private void loginButtonHandler(){
 
-        int timeout = 10000;
+        int timeout = 1000;
         DatagramSocket mySocket = null;
         InetAddress receiverHost;
         DatagramPacket datagram;

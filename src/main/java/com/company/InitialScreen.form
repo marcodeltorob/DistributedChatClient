@@ -6,9 +6,9 @@
       <xy x="20" y="20" width="500" height="450"/>
     </constraints>
     <properties>
-      <maximumSize width="420" height="400"/>
-      <minimumSize width="420" height="400"/>
-      <preferredSize width="420" height="400"/>
+      <maximumSize width="420" height="410"/>
+      <minimumSize width="420" height="410"/>
+      <preferredSize width="420" height="410"/>
     </properties>
     <border type="none"/>
     <children>
@@ -48,54 +48,12 @@
           <text value="Refresh Status"/>
         </properties>
       </component>
-      <component id="2fe19" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="22 ºC"/>
-        </properties>
-      </component>
-      <component id="1e6d1" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="Sunny Day"/>
-        </properties>
-      </component>
-      <component id="cac1f" class="javax.swing.JButton" binding="refreshUsersButton" default-binding="true">
-        <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <font name="Andale Mono"/>
-          <text value="Refresh Users"/>
-          <verifyInputWhenFocusTarget value="false"/>
-        </properties>
-      </component>
       <component id="9daf7" class="javax.swing.JLabel" binding="infoServerLabel">
         <constraints>
           <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
           <text value="Server: &lt;192.168.1.254&gt;"/>
-        </properties>
-      </component>
-      <component id="41d0b" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="12:50 PM"/>
-        </properties>
-      </component>
-      <component id="53a2" class="javax.swing.JLabel">
-        <constraints>
-          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties>
-          <text value="SUN"/>
         </properties>
       </component>
       <component id="95010" class="javax.swing.JLabel">
@@ -126,6 +84,48 @@
           </component>
         </children>
       </scrollpane>
+      <component id="2fe19" class="javax.swing.JLabel" binding="tempLabel">
+        <constraints>
+          <grid row="5" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="22 ºC"/>
+        </properties>
+      </component>
+      <component id="41d0b" class="javax.swing.JLabel">
+        <constraints>
+          <grid row="6" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="12:50 PM"/>
+        </properties>
+      </component>
+      <component id="53a2" class="javax.swing.JLabel" binding="weatherIconLabel">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="SUN"/>
+        </properties>
+      </component>
+      <component id="cac1f" class="javax.swing.JButton" binding="refreshUsersButton" default-binding="true">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="2" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Andale Mono"/>
+          <text value="Refresh Users"/>
+          <verifyInputWhenFocusTarget value="false"/>
+        </properties>
+      </component>
+      <component id="1e6d1" class="javax.swing.JLabel" binding="weatherLabel">
+        <constraints>
+          <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Sunny Day"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

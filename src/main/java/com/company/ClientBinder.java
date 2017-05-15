@@ -3,9 +3,8 @@ package com.company;
 import com.google.gson.Gson;
 
 import javax.swing.*;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.io.*;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,9 +38,16 @@ public class ClientBinder extends Thread {
 
             broadcastMessageHandler();
 
-        } else  {
+        } else if ("FORWARD_FILE".equals(udpMessage.tag)){
+            fordwardFileHandler();
+        }else  {
 
         }
+    }
+
+    private void fordwardFileHandler() {
+        FileClient fileClient = new FileClient();
+        fileClient.start();
     }
 
     private void broadcastMessageHandler() {
@@ -127,6 +133,37 @@ public class ClientBinder extends Thread {
                 mySocket.close();
         }
 
+    }
+
+    public class FileClient extends Thread {
+        public void run() {
+
+            Socket socket;
+            OutputStream out;
+            InputStream in;
+            try {
+                socket = new Socket(udpMessage.message, 3000);
+                in = socket.getInputStream();
+                out = new FileOutputStream("recv.txt");
+                copy(in, out);
+                out.close();
+                in.close();
+            } catch (UnknownHostException e) {
+                e.printStackTrace();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private void copy(InputStream in, OutputStream out) throws IOException {
+            byte[] buf = new byte[8192];
+            int len = 0;
+            while ((len = in.read(buf)) != -1) {
+                out.write(buf, 0, len);
+            }
+        }
     }
 
 

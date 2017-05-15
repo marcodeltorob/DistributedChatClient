@@ -2,15 +2,20 @@ package com.company;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.stream.JsonReader;
+import com.company.JsonReader;
 import com.restfb.FacebookClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.io.StringReader;
 import java.net.*;
 import java.util.ArrayList;
@@ -28,6 +33,9 @@ public class InitialScreen {
     private JTable usersTable;
     private JLabel userInfoJLabel;
     private JLabel infoServerLabel;
+    private JLabel tempLabel;
+    private JLabel weatherLabel;
+    private JLabel weatherIconLabel;
     private JFrame initialScreen;
     private FacebookClient fbClient;
     private String ipServer;
@@ -302,6 +310,7 @@ public class InitialScreen {
 
         userInfoJLabel.setText(name + " "+ "<" + ip + ">");
         infoServerLabel.setText("Server: <" + ipServer + ">");
+        getWeather();
 
 
 
@@ -369,6 +378,55 @@ public class InitialScreen {
         System.out.println(openChatsWindows);
         openChatsWindows.remove(chat);
         System.out.println(openChatsWindows);
+    }
+
+    private void getWeather() {
+
+        String url = "http://api.openweathermap.org/data/2.5/weather?q=Guadalajara,mx&units=metric&APPID=ed5bf1722071f5d80e262634f65830f6";
+
+        JSONObject json = null;
+        try {
+            json = JsonReader.readJsonFromUrl(url);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Get description
+        JSONArray weatherJSONArray = json.getJSONArray("weather");
+        JSONObject weatherJSONObject = (JSONObject) weatherJSONArray.get(0);
+        String descriptionString = weatherJSONObject.getString("description");
+
+        // Get temperature
+        JSONObject main = json.getJSONObject("main");
+        int temperature = main.getInt("temp");
+
+        // Get icon
+        String icon = weatherJSONObject.getString("icon");
+        String iconUrl = "http://openweathermap.org/img/w/" + icon + ".png";
+
+
+        Image image = null;
+        URL imageUrl = null;
+        ImageIcon icon2;
+        try {
+            imageUrl = new URL(iconUrl);
+            image = ImageIO.read(imageUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        icon2 = new ImageIcon(image);
+        weatherIconLabel.setText("");
+        weatherIconLabel.setIcon(icon2);
+        tempLabel.setText(String.valueOf(temperature) + " °C");
+        weatherLabel.setText(capitalize(descriptionString));
+
+    }
+
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
 }
