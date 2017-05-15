@@ -1,38 +1,133 @@
 package com.company;
 
+import com.google.gson.Gson;
+
+import javax.swing.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Created by marcodeltoro on 5/14/17.
  */
 public class ClientBinder extends Thread {
 
     UdpMessage udpMessage;
+    ArrayList<Chat> openChats = new ArrayList<Chat>();
     InitialScreen initialScreen;
+    int auxPort;
 
 
 
-    public ClientBinder(UdpMessage udpMessage, InitialScreen InitialScreen) {
+
+    public ClientBinder(UdpMessage udpMessage, InitialScreen initialScreen, int auxPort) {
         this.udpMessage = udpMessage;
         this.initialScreen = initialScreen;
-
+        this.auxPort = auxPort;
     }
 
     public void run() {
 
-
-
         if ("FORWARD_PRIVATE_MSG".equals(udpMessage.tag)) {
 
-
+            privateMessageHandler();
 
         } else if ("FORWARD_BROADCAST_MSG".equals(udpMessage.tag)) {
 
-
+            broadcastMessageHandler();
 
         } else  {
 
         }
     }
 
+    private void broadcastMessageHandler() {
+
+        int timeout = 10000;
+        DatagramSocket mySocket = null;
+        InetAddress receiverHost;
+        DatagramPacket datagram;
+
+
+        UdpMessage messageToSend = new UdpMessage();
+        messageToSend.tag = "OK_FORWARD_BROADCAST_MSG";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(messageToSend);
+
+        try {
+            receiverHost = InetAddress.getByName("192.168.100.8");
+            int receiverPort = auxPort;
+            // instantiates a datagram socket for sending the data
+            mySocket = new DatagramSocket();
+            byte[] buffer = json.getBytes();
+            datagram =
+                    new DatagramPacket(buffer, buffer.length,
+                            receiverHost, receiverPort);
+            mySocket.send(datagram);
+            //mySocket.close( );
+        }catch (Exception ex) {
+            ex.printStackTrace( );
+        }finally {
+            mySocket.close();
+        }
+        JOptionPane.showMessageDialog(null,udpMessage.message,"Broadcast Message",JOptionPane.INFORMATION_MESSAGE);
+
+    }
+
+    private void privateMessageHandler() {
+
+
+        int timeout = 10000;
+        DatagramSocket mySocket = null;
+        InetAddress receiverHost;
+        DatagramPacket datagram;
+
+        List<String> keys = Arrays.asList(udpMessage.message.split(":"));
+
+
+        System.out.println(keys);
+
+        String username = keys.get(0);
+        String message = keys.get(1);
+        Chat auxChat = initialScreen.getOpenChatOrNull(username);
+
+
+
+        if (auxChat != null) {
+            auxChat.appendToChat(message);
+        } else {
+            auxChat = initialScreen.openChatScreen(username,initialScreen.getIpServer() );
+            auxChat.appendToChat(message);
+        }
+
+        UdpMessage messageToSend = new UdpMessage();
+        messageToSend.tag = "OK_FORWARD_PRIVATE_MSG";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(messageToSend);
+
+        try {
+            receiverHost = InetAddress.getByName("192.168.100.8");
+            int receiverPort = auxPort;
+            // instantiates a datagram socket for sending the data
+            mySocket = new DatagramSocket();
+            byte[] buffer = json.getBytes();
+            datagram =
+                    new DatagramPacket(buffer, buffer.length,
+                            receiverHost, receiverPort);
+            mySocket.send(datagram);
+            //mySocket.close( );
+        }catch (Exception ex) {
+                ex.printStackTrace( );
+        }finally {
+                mySocket.close();
+        }
+
+    }
 
 
 }

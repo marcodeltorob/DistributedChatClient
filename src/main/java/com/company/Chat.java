@@ -10,7 +10,6 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -27,13 +26,19 @@ public class Chat {
     private JButton sendMessageButton;
     private JFrame chatScreen;
     private String to_nickname;
+    private String keyChat;
 
     public Chat(String name, String ipServer){
 
         this.to_nickname = name;
+        this.keyChat = name;
         renderUI(name, ipServer);
 
         setListeners();
+    }
+
+    public String getKeyChat() {
+        return this.keyChat;
     }
 
     private void setListeners() {
@@ -58,6 +63,14 @@ public class Chat {
                 sendFileButtonHandler();
             }
         });
+
+//        chatScreen.addWindowListener(new java.awt.event.WindowAdapter() {
+//            @Override
+//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+//                chatScreen.dispose();
+//
+//            }
+//        });
     }
 
 
@@ -68,7 +81,7 @@ public class Chat {
 
     private void sendMessageButtonHandler() {
 
-        int timeout = 50000;
+        int timeout = 500;
         DatagramSocket mySocket = null;
         InetAddress receiverHost;
         DatagramPacket datagram;
@@ -78,7 +91,9 @@ public class Chat {
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "PRIVATE_MSG";
         messageToSend.to_nickname = to_nickname;
+        messageToSend.nickname = keyChat;
         messageToSend.message = writeTextPane.getText();
+        System.out.println(messageToSend);
 
         Gson gson = new Gson();
         String json = gson.toJson(messageToSend);
@@ -99,6 +114,7 @@ public class Chat {
 
             // Wait for OK Forward Private Message
             mySocket.setSoTimeout(timeout);
+
             byte[] bufferReceive = new byte[512];
             DatagramPacket responseDatagramPacket = new DatagramPacket(bufferReceive, bufferReceive.length);
 
@@ -108,17 +124,15 @@ public class Chat {
                 System.out.println(s);
                 UdpMessage responseUdpMessage = gson.fromJson(s, UdpMessage.class);
                 if(responseUdpMessage.tag.equals("OK_PRIVATE_MSG")) {
-
-
+                     this.appendAcknowledgeChat();
                 }else{
-                    JOptionPane.showMessageDialog(null, "Unable to Login try later", "Unable Login",JOptionPane.INFORMATION_MESSAGE);
+
                 }
             }
             catch (SocketTimeoutException e) {
                 // timeout exception.
-                System.out.println("5 seconds timeout for user reached in brodcast" + e);
+                System.out.println("1 seconds timeout for user reached in brodcast" + e);
             }
-
         } // end try
         catch (Exception ex) {
             ex.printStackTrace( );
@@ -140,6 +154,7 @@ public class Chat {
         chatScreen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         chatScreen.setResizable(false);
         chatScreen.pack();
+        chatScreen.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         chatScreen.setVisible(true);
 
         infoLabel.setText(name);
@@ -150,8 +165,13 @@ public class Chat {
 
     public void appendToChat(String s){
         String sdf = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        readTextPane.setText(sdf + " "+ infoLabel.getText() +":  " + s + "\n");
+        readTextPane.setText(readTextPane.getText() + sdf + " "+ infoLabel.getText() +":  " + s + "\n");
     }
+
+    public void appendAcknowledgeChat(){
+        readTextPane.setText(readTextPane.getText() + " "+ infoLabel.getText() +", had received your message \n");
+    }
+
 
 
 }
