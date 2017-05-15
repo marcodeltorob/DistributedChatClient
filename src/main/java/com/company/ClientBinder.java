@@ -91,16 +91,16 @@ public class ClientBinder extends Thread {
 
         System.out.println(keys);
 
-        String username = keys.get(0);
+        String name = keys.get(0);
         String message = keys.get(1);
-        Chat auxChat = initialScreen.getOpenChatOrNull(username);
+        Chat auxChat = initialScreen.getOpenChatOrNull(name);
 
 
 
         if (auxChat != null) {
             auxChat.appendToChat(message);
         } else {
-            auxChat = initialScreen.openChatScreen(username,initialScreen.getIpServer() );
+            auxChat = initialScreen.openChatScreen(name, initialScreen.getIpServer());
             auxChat.appendToChat(message);
         }
 

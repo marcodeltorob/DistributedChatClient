@@ -31,6 +31,7 @@ public class Chat {
 
     public Chat(String name, String ipServer, String username){
 
+        this.username = username;
         this.to_nickname = name;
         this.keyChat = name;
         renderUI(name, ipServer);
@@ -94,6 +95,8 @@ public class Chat {
         messageToSend.to_nickname = to_nickname;
         messageToSend.nickname = username;
         messageToSend.message = writeTextPane.getText();
+
+        appendToChat(writeTextPane.getText());
         System.out.println(messageToSend);
 
         Gson gson = new Gson();
