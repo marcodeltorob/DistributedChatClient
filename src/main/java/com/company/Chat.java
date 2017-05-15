@@ -27,8 +27,9 @@ public class Chat {
     private JFrame chatScreen;
     private String to_nickname;
     private String keyChat;
+    private String username;
 
-    public Chat(String name, String ipServer){
+    public Chat(String name, String ipServer, String username){
 
         this.to_nickname = name;
         this.keyChat = name;
@@ -91,7 +92,7 @@ public class Chat {
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "PRIVATE_MSG";
         messageToSend.to_nickname = to_nickname;
-        messageToSend.nickname = keyChat;
+        messageToSend.nickname = username;
         messageToSend.message = writeTextPane.getText();
         System.out.println(messageToSend);
 

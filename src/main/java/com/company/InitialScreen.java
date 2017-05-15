@@ -307,7 +307,7 @@ public class InitialScreen {
 
     public Chat openChatScreen(String name, String ipServer) {
 
-        Chat chat =  new Chat(name, ipServer);
+        Chat chat =  new Chat(name, ipServer, username);
         openChatsWindows.add(chat);
         return chat;
 
