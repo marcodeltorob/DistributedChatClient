@@ -18,8 +18,10 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.StringReader;
 import java.net.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +38,7 @@ public class InitialScreen {
     private JLabel tempLabel;
     private JLabel weatherLabel;
     private JLabel weatherIconLabel;
+    private JLabel timeLabel;
     private JFrame initialScreen;
     private FacebookClient fbClient;
     private String ipServer;
@@ -133,7 +136,7 @@ public class InitialScreen {
         String json = gson.toJson(messageToSend);
 
         try {
-            receiverHost = InetAddress.getByName("192.168.100.8");
+            receiverHost = InetAddress.getByName("192.168.0.101");
             int receiverPort = Integer.parseInt("8000");
 
 
@@ -209,7 +212,7 @@ public class InitialScreen {
         String json = gson.toJson(messageToSend);
 
         try {
-            receiverHost = InetAddress.getByName("192.168.100.8");
+            receiverHost = InetAddress.getByName("192.168.0.101");
             int receiverPort = Integer.parseInt("8000");
 
 
@@ -289,7 +292,7 @@ public class InitialScreen {
     }
 
 
-    private void renderUI(String name,String ipServer){
+    private void renderUI(final String name, String ipServer){
 
         //requestUsers();
         setupOnlineUsersJTable();
@@ -300,21 +303,39 @@ public class InitialScreen {
         initialScreen.pack();
         initialScreen.setVisible(true);
 
+        userInfoJLabel.setText("");
+        new Thread(new Runnable() {
+            public void run() {
+                String ip  = null;
+                try {
+                    ip = InetAddress.getLocalHost().getHostAddress();
+                    userInfoJLabel.setText(name + " "+ "<" + ip + ">");
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
 
-        String ip  = null;
-        try {
-            ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
+            }
+        }).start();
 
-        userInfoJLabel.setText(name + " "+ "<" + ip + ">");
         infoServerLabel.setText("Server: <" + ipServer + ">");
         getWeather();
 
+        setClock();
 
 
 
+
+    }
+
+    private void setClock() {
+        timeLabel.setText("");
+        Timer SimpleTimer = new Timer(1000, new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                String sdf = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                timeLabel.setText(sdf);
+            }
+        });
+        SimpleTimer.start();
     }
 
 

@@ -64,35 +64,35 @@ public class Login {
         InetAddress receiverHost;
         DatagramPacket datagram;
 
-//        String domain = "http://google.com/";
-//
-//        String authUrl = "https://graph.facebook.com/oauth/authorize?type=user_agent&client_id="+appId+"&redirect_uri="+domain+"&scope=user_about_me,publish_actions";
-//
-//        System.setProperty("webdriver.chrome.driver", getDriverName());
-//
-//        WebDriver driver = new ChromeDriver();
-//        driver.get(authUrl);
-//        String accessToken;
-//        User user;
-//        while(true){
-//
-//            if(!driver.getCurrentUrl().contains("facebook.com")){
-//                String url = driver.getCurrentUrl();
-//                accessToken = url.replaceAll(".*#access_token=(.+)&.*", "$1");
-//
-//                driver.quit();
-//
-//                fbClient = new DefaultFacebookClient(accessToken);
-//                user = fbClient.fetchObject("me",User.class);
-//
-//                System.out.println(user.getName());
-//                break;
-//            }
-//
-//        }
+        String domain = "http://google.com/";
+
+        String authUrl = "https://graph.facebook.com/oauth/authorize?type=user_agent&client_id="+appId+"&redirect_uri="+domain+"&scope=user_about_me,publish_actions";
+
+        System.setProperty("webdriver.chrome.driver", getDriverName());
+
+        WebDriver driver = new ChromeDriver();
+        driver.get(authUrl);
+        String accessToken;
+        User user;
+        while(true){
+
+            if(!driver.getCurrentUrl().contains("facebook.com")){
+                String url = driver.getCurrentUrl();
+                accessToken = url.replaceAll(".*#access_token=(.+)&.*", "$1");
+
+                driver.quit();
+
+                fbClient = new DefaultFacebookClient(accessToken);
+                user = fbClient.fetchObject("me",User.class);
+
+                System.out.println(user.getName());
+                break;
+            }
+
+        }
 
         String tempUser = "Marco Del Toro";
-//        tempUser = user.getName();
+        tempUser = user.getName();
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "REQUEST_CONNECTION";
         messageToSend.nickname = tempUser;
@@ -101,7 +101,7 @@ public class Login {
         String json = gson.toJson(messageToSend);
 
         try {
-            receiverHost = InetAddress.getByName("192.168.100.8");
+            receiverHost = InetAddress.getByName("192.168.0.101");
             int receiverPort = Integer.parseInt("8000");
 
 
@@ -123,8 +123,8 @@ public class Login {
                 mySocket.receive(responseDatagramPacket);
                 UdpMessage responseUdpMessage = gson.fromJson(new String(responseDatagramPacket.getData(), 0, responseDatagramPacket.getLength()), UdpMessage.class);
                 if(responseUdpMessage.tag.equals("OK_REQUEST_CONNECTION")) {
-                    openInitialScreen(tempUser, "192.168.100.8",null);
-//                  openInitialScreen(tempUser,"192.168.100.8" , fbClient);
+//                    openInitialScreen(tempUser, "192.168.100.8",null);
+                  openInitialScreen(tempUser,"192.168.0.101" , fbClient);
                 }else{
                     JOptionPane.showMessageDialog(null, "Unable to Login try later", "Unable Login",JOptionPane.INFORMATION_MESSAGE);
                 }
