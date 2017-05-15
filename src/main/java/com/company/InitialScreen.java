@@ -322,7 +322,7 @@ public class InitialScreen {
 
         new Thread(new Runnable() {
             public void run() {
-                int port = 8000;
+                int port = 9000; // Listener ChatClient
                 final int MAX_LEN = 512;
                 UdpMessage udpMessage = null;
                 String jsonMessage;
