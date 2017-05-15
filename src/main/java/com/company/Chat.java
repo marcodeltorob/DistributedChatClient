@@ -146,6 +146,8 @@ public class Chat {
             mySocket.close();
         }
 
+        writeTextPane.setText("");
+
     }
 
     private void blockButtonHandler() {
