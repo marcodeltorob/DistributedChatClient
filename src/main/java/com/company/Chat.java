@@ -10,6 +10,8 @@ import java.net.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static java.lang.Thread.sleep;
+
 /**
  * Created by marcodeltoro on 5/7/17.
  */
@@ -27,6 +29,7 @@ public class Chat {
     private String keyChat;
     private String username;
     private InitialScreen initialScreen;
+    String filename;
 
     public Chat(String name, String ipServer, String username, InitialScreen initialScreen){
 
@@ -95,10 +98,17 @@ public class Chat {
         FileServer fileServer = new FileServer();
         fileServer.start();
 
+        try {
+            sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "FILE";
         messageToSend.to_nickname = to_nickname;
         messageToSend.nickname = username;
+        messageToSend.message = filename;
 
         Gson gson = new Gson();
         String json = gson.toJson(messageToSend);
@@ -230,6 +240,7 @@ public class Chat {
     }
 
     public class FileServer extends Thread {
+
         public void run() {
             ServerSocket ss = null;
             InputStream in = null;
@@ -238,18 +249,33 @@ public class Chat {
             try {
                 ss = new ServerSocket(3000);
                 ss.setSoTimeout(5000);
-                socket = ss.accept();
 
-                in = new FileInputStream("send.txt");
-                out = socket.getOutputStream();
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+                int result = fileChooser.showOpenDialog(null);
 
-                copy(in, out);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    socket = ss.accept();
+                    File selectedFile = fileChooser.getSelectedFile();
+
+                    filename = selectedFile.getName();
+
+                    in = new FileInputStream(selectedFile.getAbsolutePath());
+                    out = socket.getOutputStream();
+                    copy(in, out);
+                }
+
                 out.close();
                 in.close();
+                socket.close();
+                ss.close();
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
+            }finally {
+
             }
+
         }
 
         private void copy(InputStream in, OutputStream out) throws IOException {
