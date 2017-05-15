@@ -92,6 +92,7 @@ public class Login {
 //        }
 
         String tempUser = "Marco Del Toro";
+//        tempUser = user.getName();
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "REQUEST_CONNECTION";
         messageToSend.nickname = tempUser;
@@ -123,7 +124,7 @@ public class Login {
                 UdpMessage responseUdpMessage = gson.fromJson(new String(responseDatagramPacket.getData(), 0, responseDatagramPacket.getLength()), UdpMessage.class);
                 if(responseUdpMessage.tag.equals("OK_REQUEST_CONNECTION")) {
                     openInitialScreen(tempUser, "192.168.100.8",null);
-//                  openInitialScreen(user.getName(),"192.168.100.8" ,fbClient);
+//                  openInitialScreen(tempUser,"192.168.100.8" , fbClient);
                 }else{
                     JOptionPane.showMessageDialog(null, "Unable to Login try later", "Unable Login",JOptionPane.INFORMATION_MESSAGE);
                 }

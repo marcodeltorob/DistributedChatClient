@@ -142,9 +142,14 @@ public class ClientBinder extends Thread {
             OutputStream out;
             InputStream in;
             try {
-                socket = new Socket(udpMessage.ip, 3000);
+
+                List<String> keys = Arrays.asList(udpMessage.message.split(","));
+                String fileName = keys.get(0);
+                String ip = keys.get(1);
+
+                socket = new Socket(ip, 3000);
                 in = socket.getInputStream();
-                out = new FileOutputStream(udpMessage.message);
+                out = new FileOutputStream(fileName);
                 copy(in, out);
                 out.close();
                 in.close();

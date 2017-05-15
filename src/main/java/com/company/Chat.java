@@ -95,20 +95,22 @@ public class Chat {
         InetAddress receiverHost;
         DatagramPacket datagram;
 
-        FileServer fileServer = new FileServer();
+        String selectedFile = "send.txt";
+        FileServer fileServer = new FileServer(selectedFile);
         fileServer.start();
 
         try {
-            sleep(1000);
+            sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        System.out.println("PASO");
 
         UdpMessage messageToSend = new UdpMessage();
         messageToSend.tag = "FILE";
         messageToSend.to_nickname = to_nickname;
         messageToSend.nickname = username;
-        messageToSend.message = filename;
+        messageToSend.message = selectedFile;
 
         Gson gson = new Gson();
         String json = gson.toJson(messageToSend);
@@ -138,6 +140,7 @@ public class Chat {
         }finally {
             mySocket.close();
         }
+
 
 
     }
@@ -241,29 +244,28 @@ public class Chat {
 
     public class FileServer extends Thread {
 
+        String file;
+
+        public FileServer(String file) {
+            this.file = file;
+        }
+
         public void run() {
             ServerSocket ss = null;
             InputStream in = null;
             OutputStream out = null;
             Socket socket = null;
+
             try {
                 ss = new ServerSocket(3000);
-                ss.setSoTimeout(5000);
+//                ss.setSoTimeout(1000);
+                System.out.println("Before accept");
+                socket = ss.accept();
+                System.out.println("After accept");
 
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
-                int result = fileChooser.showOpenDialog(null);
-
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    socket = ss.accept();
-                    File selectedFile = fileChooser.getSelectedFile();
-
-                    filename = selectedFile.getName();
-
-                    in = new FileInputStream(selectedFile.getAbsolutePath());
-                    out = socket.getOutputStream();
-                    copy(in, out);
-                }
+                in = new FileInputStream(file);
+                out = socket.getOutputStream();
+                copy(in, out);
 
                 out.close();
                 in.close();
@@ -272,8 +274,6 @@ public class Chat {
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
-            }finally {
-
             }
 
         }
