@@ -149,10 +149,11 @@ public class ClientBinder extends Thread {
 
                 socket = new Socket(ip, 3000);
                 in = socket.getInputStream();
-                out = new FileOutputStream(fileName);
+                out = new FileOutputStream("DocumentsReceived/"+fileName);
                 copy(in, out);
                 out.close();
                 in.close();
+                JOptionPane.showMessageDialog(null,"You have new file: DocumentsReceived"+fileName, "New File", JOptionPane.INFORMATION_MESSAGE);
             } catch (UnknownHostException e) {
                 e.printStackTrace();
             } catch (FileNotFoundException e) {

@@ -95,53 +95,59 @@ public class Chat {
         InetAddress receiverHost;
         DatagramPacket datagram;
 
-        String selectedFile = "send.txt";
-        FileServer fileServer = new FileServer(selectedFile);
-        fileServer.start();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        int result = fileChooser.showOpenDialog(null);
 
-        try {
-            sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+
+            FileServer fileServer = new FileServer(selectedFile);
+            fileServer.start();
+
+            try {
+                sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("PASO");
+
+            UdpMessage messageToSend = new UdpMessage();
+            messageToSend.tag = "FILE";
+            messageToSend.to_nickname = to_nickname;
+            messageToSend.nickname = username;
+            messageToSend.message = selectedFile.getName();
+
+            Gson gson = new Gson();
+            String json = gson.toJson(messageToSend);
+
+            try {
+                receiverHost = InetAddress.getByName("192.168.100.8");
+                int receiverPort = Integer.parseInt("8000");
+
+
+                // instantiates a datagram socket for sending the data
+                mySocket = new DatagramSocket();
+                byte[ ] buffer = json.getBytes( );
+                datagram = new DatagramPacket(buffer, buffer.length, receiverHost, receiverPort);
+
+                mySocket.send(datagram);
+                //mySocket.close( );
+
+                // Wait for OK Forward Private Message
+                mySocket.setSoTimeout(timeout);
+
+                byte[] bufferReceive = new byte[512];
+                DatagramPacket responseDatagramPacket = new DatagramPacket(bufferReceive, bufferReceive.length);
+
+            } // end try
+            catch (Exception ex) {
+                ex.printStackTrace( );
+            }finally {
+                mySocket.close();
+            }
+
         }
-        System.out.println("PASO");
-
-        UdpMessage messageToSend = new UdpMessage();
-        messageToSend.tag = "FILE";
-        messageToSend.to_nickname = to_nickname;
-        messageToSend.nickname = username;
-        messageToSend.message = selectedFile;
-
-        Gson gson = new Gson();
-        String json = gson.toJson(messageToSend);
-
-        try {
-            receiverHost = InetAddress.getByName("192.168.100.8");
-            int receiverPort = Integer.parseInt("8000");
-
-
-            // instantiates a datagram socket for sending the data
-            mySocket = new DatagramSocket();
-            byte[ ] buffer = json.getBytes( );
-            datagram = new DatagramPacket(buffer, buffer.length, receiverHost, receiverPort);
-
-            mySocket.send(datagram);
-            //mySocket.close( );
-
-            // Wait for OK Forward Private Message
-            mySocket.setSoTimeout(timeout);
-
-            byte[] bufferReceive = new byte[512];
-            DatagramPacket responseDatagramPacket = new DatagramPacket(bufferReceive, bufferReceive.length);
-
-        } // end try
-        catch (Exception ex) {
-            ex.printStackTrace( );
-        }finally {
-            mySocket.close();
-        }
-
-
 
     }
 
@@ -244,9 +250,9 @@ public class Chat {
 
     public class FileServer extends Thread {
 
-        String file;
+        File file;
 
-        public FileServer(String file) {
+        public FileServer(File file) {
             this.file = file;
         }
 

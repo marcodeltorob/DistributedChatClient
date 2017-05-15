@@ -194,7 +194,7 @@ public class InitialScreen {
 
     public void requestUsers(){
 
-        int timeout = 10000;
+        int timeout = 2000;
         DatagramSocket mySocket = null;
         InetAddress receiverHost;
         DatagramPacket datagram;
@@ -223,7 +223,7 @@ public class InitialScreen {
             //mySocket.close( );
 
             // Wait for OK Forward Private Message
-            //mySocket.setSoTimeout(timeout);
+            mySocket.setSoTimeout(timeout);
             byte[] bufferReceive = new byte[512];
             DatagramPacket responseDatagramPacket = new DatagramPacket(bufferReceive, bufferReceive.length);
 
