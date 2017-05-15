@@ -98,7 +98,7 @@ public class Chat {
         messageToSend.nickname = username;
         messageToSend.message = writeTextPane.getText();
 
-        appendToChat(writeTextPane.getText());
+        appendToChat(username + ": "+ writeTextPane.getText());
         System.out.println(messageToSend);
 
         Gson gson = new Gson();
@@ -171,7 +171,7 @@ public class Chat {
 
     public void appendToChat(String s){
         String sdf = new SimpleDateFormat("HH:mm:ss").format(new Date());
-        readTextPane.setText(readTextPane.getText() + sdf + " "+ infoLabel.getText() +":  " + s + "\n");
+        readTextPane.setText(readTextPane.getText() + sdf + s + "\n");
     }
 
     public void appendAcknowledgeChat(){

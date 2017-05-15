@@ -47,7 +47,6 @@ public class InitialScreen {
 
         setToReceiveMessages(this);
 
-
     }
 
 

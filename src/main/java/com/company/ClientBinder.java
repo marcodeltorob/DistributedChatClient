@@ -98,10 +98,10 @@ public class ClientBinder extends Thread {
 
 
         if (auxChat != null) {
-            auxChat.appendToChat(message);
+            auxChat.appendToChat(name + ": " + message);
         } else {
             auxChat = initialScreen.openChatScreen(name, initialScreen.getIpServer());
-            auxChat.appendToChat(message);
+            auxChat.appendToChat(name + ": " + message);
         }
 
         UdpMessage messageToSend = new UdpMessage();
