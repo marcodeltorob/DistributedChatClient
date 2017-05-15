@@ -32,22 +32,27 @@ public class InitialScreen {
     private FacebookClient fbClient;
     private String ipServer;
     private String username;
+
     List<String> onlineUsersList;
     DefaultTableModel onlineUsersTableModel;
     ArrayList<Chat> openChatsWindows = new ArrayList<Chat>();
-
-
-    public InitialScreen(String name, final String ipServer , FacebookClient fbClient) {
+    public InitialScreen(String username, final String ipServer , FacebookClient fbClient) {
 
         this.fbClient = fbClient;
         this.ipServer = ipServer;
-        this.username = name;
-        renderUI(name,ipServer);
+        this.username = username;
+
+        renderUI(username, ipServer);
         addActionListeners(ipServer);
 
         setToReceiveMessages(this);
 
 
+    }
+
+
+    public String getUsername() {
+        return username;
     }
 
     public String getIpServer() {
@@ -307,7 +312,7 @@ public class InitialScreen {
 
     public Chat openChatScreen(String name, String ipServer) {
 
-        Chat chat =  new Chat(name, ipServer, username);
+        Chat chat =  new Chat(name, ipServer, username, this);
         openChatsWindows.add(chat);
         return chat;
 
@@ -360,5 +365,11 @@ public class InitialScreen {
 
     }
 
+    public void removeOpenChatWindows(Chat chat) {
+
+        System.out.println(openChatsWindows);
+        openChatsWindows.remove(chat);
+        System.out.println(openChatsWindows);
+    }
 
 }

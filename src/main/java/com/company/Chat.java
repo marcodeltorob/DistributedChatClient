@@ -28,12 +28,14 @@ public class Chat {
     private String to_nickname;
     private String keyChat;
     private String username;
+    private InitialScreen initialScreen;
 
-    public Chat(String name, String ipServer, String username){
+    public Chat(String name, String ipServer, String username, InitialScreen initialScreen){
 
         this.username = username;
         this.to_nickname = name;
         this.keyChat = name;
+        this.initialScreen = initialScreen;
         renderUI(name, ipServer);
 
         setListeners();
@@ -44,6 +46,7 @@ public class Chat {
     }
 
     private void setListeners() {
+        final Chat chat = this;
         blockButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -66,13 +69,12 @@ public class Chat {
             }
         });
 
-//        chatScreen.addWindowListener(new java.awt.event.WindowAdapter() {
-//            @Override
-//            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-//                chatScreen.dispose();
-//
-//            }
-//        });
+        chatScreen.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                initialScreen.removeOpenChatWindows(chat);
+            }
+        });
     }
 
 

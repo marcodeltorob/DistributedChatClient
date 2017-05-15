@@ -146,10 +146,10 @@ public class Login {
 
     }
 
-    private void openInitialScreen(String name, String ipServer,FacebookClient fbClient) {
+    private void openInitialScreen(String username, String ipServer,FacebookClient fbClient) {
 
         mainFrame.dispose();
-        new InitialScreen(name, ipServer ,fbClient);
+        new InitialScreen(username, ipServer ,fbClient);
 
     }
 
