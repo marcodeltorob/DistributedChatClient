@@ -122,7 +122,7 @@ public class Chat {
             String json = gson.toJson(messageToSend);
 
             try {
-                receiverHost = InetAddress.getByName("192.168.100.8");
+                receiverHost = InetAddress.getByName("192.168.0.101");
                 int receiverPort = Integer.parseInt("8000");
 
 
